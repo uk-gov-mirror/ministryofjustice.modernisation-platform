@@ -19,6 +19,15 @@ get_all_local_environment_definitions_split_by_application () {
   done
 }
 
+create_bastion_host () {
+  for file in environments/*.json
+  do
+      if  [[ ! -z `cat $file | jq '.bastion[]?'` ]];then
+            cp ../templates/bastion.tf "$line"/bastion.tf
+      fi
+  done
+}
+
 create_local_workspaces () {
   cd terraform/environments || exit
   while read -r line; do
@@ -26,12 +35,6 @@ create_local_workspaces () {
     mkdir -p "$line"
     cp ../templates/backend.tf "$line"/backend.tf
     cp ../templates/secrets.tf "$line"/secrets.tf
-    for file in environments/*.json
-    do
-        if  [[ ! -z `cat $file | jq '.bastion[]?'` ]];then
-            cp ../templates/bastion.tf "$line"/bastion.tf
-        fi
-    done
     sed -i '' -e "s/application_name/$line/g" "$line"/backend.tf
     cd "$line" || exit
     run_terraform
@@ -74,6 +77,7 @@ main () {
   get_all_local_application_definitions &&
   get_all_local_environment_definitions_split_by_application &&
   create_local_workspaces &&
+  create_bastion_host &&
   compare_local_and_remote_definitions &&
   create_remote_workspaces &&
   rm -r tmp/
