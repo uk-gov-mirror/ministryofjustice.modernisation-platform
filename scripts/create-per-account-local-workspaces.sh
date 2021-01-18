@@ -26,11 +26,12 @@ create_local_workspaces () {
     mkdir -p "$line"
     cp ../templates/backend.tf "$line"/backend.tf
     cp ../templates/secrets.tf "$line"/secrets.tf
-
-    if  [[ ! -z `cat $file | jq '.bastion[]?'` ]]; then
+    for file in environments/*.json
+    do
+        if  [[ ! -z `cat $file | jq '.bastion[]?'` ]];then
             cp ../templates/bastion.tf "$line"/bastion.tf
-    fi
-      
+        fi
+    done
     sed -i '' -e "s/application_name/$line/g" "$line"/backend.tf
     cd "$line" || exit
     run_terraform
