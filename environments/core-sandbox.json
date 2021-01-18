@@ -1,5 +1,6 @@
 {
   "environments": ["dev"],
+  "bastion": true,
   "tags": {
     "application": "core-sandbox",
     "business-unit": "Platforms",
