@@ -27,14 +27,10 @@ create_local_workspaces () {
     cp ../templates/backend.tf "$line"/backend.tf
     cp ../templates/secrets.tf "$line"/secrets.tf
 
-    if  [[ -z `cat $file | jq '.bastion[]?'` ]]
-        then
-            echo "No bastions"
-        else
-            echo "Copying config"
+    if  [[ ! -z `cat $file | jq '.bastion[]?'` ]]; then
             cp ../templates/bastion.tf "$line"/bastion.tf
     fi
-    
+      
     sed -i '' -e "s/application_name/$line/g" "$line"/backend.tf
     cd "$line" || exit
     run_terraform
