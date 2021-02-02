@@ -4,33 +4,32 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
+  # Availability Zones
   availability_zones = sort(data.aws_availability_zones.available.names)
 
-  # Subnets
-  expanded_subnets = chunklist(cidrsubnets(var.vpc_cidr, 9, 9, 9, 4, 4, 4, 4, 4, 4, 4, 4, 4), 3)
+  # Subnet types
+  subnet_types = ["private", "public", "data", "transit-gateway"]
 
-  # Subnet associations
-  expanded_subnets_assocation = flatten([
-    for key, subnet in local.expanded_subnets : [
-      for cidr_index, cidr in subnet : {
-        key   = key
-        cidr  = cidr
-        az    = local.availability_zones[cidr_index]
-        type  = key == 0 ? "tgw" : (key == 1 ? "data" : (key == 2 ? "private" : "public"))
-        group = var.tags_prefix
-      }
-    ]
-  ])
+  # Subnet CIDRs
+  subnet_cidrs = cidrsubnets(var.vpc_cidr, 9, 9, 9, 4, 4, 4, 4, 4, 4, 4, 4, 4)
 
-  # Subnets with keys
-  expanded_subnets_with_keys = {
-    for subnet in local.expanded_subnets_assocation :
+  # Subnet types paired with each availability zone
+  subnet_types_across_azs = [
+    # Create a cartesian product across subnet types, and availability zones
+    for index, type in setproduct(local.subnet_types, local.availability_zones) :
+    # Key the type, availability zone, CIDR block, and group for each pairing
+    zipmap(["type", "az", "cidr", "group"], concat(type, [local.subnet_cidrs[index], var.tags_prefix]))
+  ]
+
+  # Rekey subnets so Terraform can track named resource changes rather than rely on count/indice
+  subnets_with_keys = {
+    for subnet in local.subnet_types_across_azs :
     "${subnet.group}-${subnet.type}-${subnet.az}" => subnet
   }
 
   # build subnet group type
   subnet_group = distinct([
-    for key, subnet in local.expanded_subnets_with_keys :
+    for key, subnet in local.subnets_with_keys :
     "${subnet.group}-${subnet.type}"
   ])
   # default rules for subnets
@@ -98,8 +97,7 @@ resource "aws_flow_log" "cloudwatch" {
 
 # VPC: Subnet per type, per availability zone
 resource "aws_subnet" "subnets" {
-
-  for_each = tomap(local.expanded_subnets_with_keys)
+  for_each = tomap(local.subnets_with_keys)
 
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = each.value.cidr
@@ -108,7 +106,8 @@ resource "aws_subnet" "subnets" {
   tags = merge(
     var.tags_common,
     {
-      Name = each.key
+      Name = each.key,
+      type = each.value.type
     }
   )
 }
@@ -199,7 +198,7 @@ resource "aws_route" "public_ig" {
 # Non-public route tables
 resource "aws_route_table" "private" {
   for_each = {
-    for key, value in local.expanded_subnets_with_keys :
+    for key, value in local.subnets_with_keys :
     key => value
     if value.type != "public"
   }
@@ -214,7 +213,7 @@ resource "aws_route_table" "private" {
 }
 # Route table associations
 resource "aws_route_table_association" "default" {
-  for_each = local.expanded_subnets_with_keys
+  for_each = local.subnets_with_keys
 
   subnet_id      = aws_subnet.subnets[each.key].id
   route_table_id = each.value.type == "public" ? aws_route_table.public.id : aws_route_table.private[each.key].id
@@ -223,7 +222,7 @@ resource "aws_route_table_association" "default" {
 # Elastic IPs for NAT Gateway
 resource "aws_eip" "default" {
   for_each = {
-    for key, value in local.expanded_subnets_with_keys :
+    for key, value in local.subnets_with_keys :
     key => value
     if value.type == "public" && var.gateway == "nat"
   }
@@ -241,7 +240,7 @@ resource "aws_eip" "default" {
 # Public NAT Gateway
 resource "aws_nat_gateway" "default" {
   for_each = {
-    for key, value in local.expanded_subnets_with_keys :
+    for key, value in local.subnets_with_keys :
     key => value
     if value.type == "public" && var.gateway == "nat"
   }
@@ -260,7 +259,7 @@ resource "aws_nat_gateway" "default" {
 # Private routes
 resource "aws_route" "private_nat" {
   for_each = {
-    for key, value in local.expanded_subnets_with_keys :
+    for key, value in local.subnets_with_keys :
     key => value
     if value.type != "public" && var.gateway == "nat"
   }
@@ -272,7 +271,7 @@ resource "aws_route" "private_nat" {
 
 resource "aws_route" "private_transit_gateway" {
   for_each = {
-    for key, value in local.expanded_subnets_with_keys :
+    for key, value in local.subnets_with_keys :
     key => value
     if value.type != "public" && var.gateway == "transit"
   }
