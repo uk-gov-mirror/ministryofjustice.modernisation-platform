@@ -28,3 +28,8 @@ output "private_route_tables" {
     if value.type != "public"
   }
 }
+
+output "vpc_cidr" {
+  description = "VPC CIDR block"
+  value = aws_vpc.vpc.cidr_block
+}
