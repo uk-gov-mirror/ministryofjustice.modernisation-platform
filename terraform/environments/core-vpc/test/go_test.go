@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -12,40 +13,33 @@ import (
 
 func TestProductionCoreAccount(t *testing.T) {
 
-	// Open our jsonFile
-	jsonFile, err := os.Open("../../../scripts/tests/validate/fixtures/pre-terraform-core-vpc-validation.json")
+	environment := os.Getenv("TF_ENV")
+	println(environment)
 
-	// if we os.Open returns an error then handle it
+	// Open our jsonFile
+	jsonFile, err := ioutil.ReadFile("../../../../scripts/tests/validate/fixtures/pre-terraform-core-vpc-validation.json")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Print(err)
 	}
 
-	value := gjson.Get(jsonFile, "subnet_sets")
+	value := gjson.Get(string(jsonFile), "subnet_sets")
 
 	value.ForEach(func(key, value gjson.Result) bool {
-		// println(key.String() + ":" + value.String())
 		Department := key.String()
-		// println("Department: " + Department)
-		// println("Value: " + value.String())
 
-		value2 := gjson.Get(jsonFile, "subnet_sets."+Department)
+		value2 := gjson.Get(string(jsonFile), "subnet_sets."+Department)
 		value2.ForEach(func(key2, value2 gjson.Result) bool {
-
 			Subnet_set := key2.String()
 
-			value3 := gjson.Get(jsonFile, "subnet_sets."+Department+"."+Subnet_set)
+			value3 := gjson.Get(string(jsonFile), "subnet_sets."+Department+"."+Subnet_set)
 			value3.ForEach(func(key3, value3 gjson.Result) bool {
-
 				println("Key3: " + key3.String())
 				println("Value3: " + value3.String())
 				return true // keep iterating
 			})
-
 			return true // keep iterating
 		})
-
 		return true // keep iterating
-
 	})
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
