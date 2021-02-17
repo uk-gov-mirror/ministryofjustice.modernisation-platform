@@ -1,6 +1,8 @@
 package test
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -10,7 +12,15 @@ import (
 
 func TestProductionCoreAccount(t *testing.T) {
 
-	value := gjson.Get(json, "subnet_sets")
+	// Open our jsonFile
+	jsonFile, err := os.Open("../../../scripts/tests/validate/fixtures/pre-terraform-core-vpc-validation.json")
+
+	// if we os.Open returns an error then handle it
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	value := gjson.Get(jsonFile, "subnet_sets")
 
 	value.ForEach(func(key, value gjson.Result) bool {
 		// println(key.String() + ":" + value.String())
@@ -18,12 +28,12 @@ func TestProductionCoreAccount(t *testing.T) {
 		// println("Department: " + Department)
 		// println("Value: " + value.String())
 
-		value2 := gjson.Get(json, "subnet_sets."+Department)
+		value2 := gjson.Get(jsonFile, "subnet_sets."+Department)
 		value2.ForEach(func(key2, value2 gjson.Result) bool {
 
 			Subnet_set := key2.String()
 
-			value3 := gjson.Get(json, "subnet_sets."+Department+"."+Subnet_set)
+			value3 := gjson.Get(jsonFile, "subnet_sets."+Department+"."+Subnet_set)
 			value3.ForEach(func(key3, value3 gjson.Result) bool {
 
 				println("Key3: " + key3.String())
