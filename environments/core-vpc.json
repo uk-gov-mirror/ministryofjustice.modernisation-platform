@@ -1,7 +1,9 @@
 {
 	"environments": [
 		"production",
-		"non-live-data"
+		"preproduction",
+		"test",
+		"development"
 	],
 	"tags": {
 		"application": "modernisation-platform",
