@@ -23,7 +23,7 @@ We have decided to use AWS ACM as our Private CA. This decision was based on a d
  
 - ACM offers free public/private certificates for use with integrated AWS services
  
-ACM PCA does have a cost associated with the setup and management of the private root CA and subordinate certificates.
+ACM PCA does have a cost associated with the setup and management of the private root CA and subordinate certificates. There will be 2 private subordinate certificates, one for the live (production and preproduction) and a seperate certificate for non-live (test and development). 
  
 We believe the costs associated with setting up an ACM PCA are as follows:
  
