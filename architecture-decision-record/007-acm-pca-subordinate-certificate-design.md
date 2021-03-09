@@ -9,7 +9,9 @@ Date: 2021-03-04
 ## Context
  
 The Modernisation Platform requires a secure PKI management utility that supports the creation and management of internal private certificates and subordinates.
+
 There are many certificate options available, including third-party certificate authorities such as LetEncrypt. ACM is an AWS certificate management tool that lets you easily, manage and deploy TLS/SSL certificates for use with AWS services. ACM allows for easy integration with existing AWS load balancers, CloudFront distributions, and API Gateway, allowing ACM to manage the lifecycle of the certificate. EC2 instances are not managed by ACM and require the private certificate to be exported and installed locally on the EC2 instance. This will not be controlled by ACM and will need its own method of certificate lifecycle management to be setup.
+
 LetsEncrypt offers a free certificate management service that can be integrated into ACM. The service requires access to a third-party vendor in order for the root and subordinate certificates to be managed. A local agent (certbot) is also required to be inst
  
  
