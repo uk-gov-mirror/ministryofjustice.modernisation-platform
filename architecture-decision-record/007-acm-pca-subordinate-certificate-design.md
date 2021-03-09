@@ -28,8 +28,8 @@ ACM PCA does have a cost associated with the setup and management of the private
 We believe the costs associated with setting up an ACM PCA are as follows:
  
 1 x private root CA
-1 x private subordinate certificate (live)
-1 x private subordinate certificate (non-live)
+1 x private subordinate CA (live)
+1 x private subordinate CA (non-live)
  
 We estimate the monthly cost associated with managing an ACM private CA for the modernisation platform to be base on the current pricing model.
  
