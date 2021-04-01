@@ -145,3 +145,18 @@ variable "db_password" {
 variable "health_check_path" {
   default = "/opa/opa-hub/manager"
 }
+
+variable "business_unit" {
+  type        = string
+  description = "Fixed variable to specify business-unit for RAM shared subnets"
+}
+
+variable "subnet_set" {
+  type        = string
+  description = "Fixed variable to specify subnet-set for RAM shared subnets"
+}
+
+variable "account_name" {
+  type        = string
+  description = "account name without environment name excluded - can be used to extract environment from workspace name"
+}

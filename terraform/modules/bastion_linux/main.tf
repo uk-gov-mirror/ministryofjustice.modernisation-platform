@@ -13,8 +13,8 @@ locals {
   ## TEMP override whilst using sandbox type accounts, UNCOMMENT THE BELOW LINE
   ## Delete static line below it
   ##############################################################################
-  # environment_name = trimprefix(terraform.workspace, "${var.account_name}-")
-  environment_name = "production"
+  #environment_name = trimprefix(terraform.workspace, "${var.account_name}-")
+  environment_name = "development"
 
 }
 
@@ -37,6 +37,7 @@ data "aws_subnet" "private_az_a" {
 # get core_vpc account protected subnets security group
 data "aws_security_group" "core_vpc_protected" {
   provider = aws.share-host
+  vpc_id       = data.aws_vpc.shared_vpc.id
   tags = {
     Name = "${var.subnet_set}_SSM"
   }

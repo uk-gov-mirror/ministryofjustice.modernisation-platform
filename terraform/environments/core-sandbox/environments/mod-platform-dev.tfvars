@@ -1,4 +1,7 @@
 aws_account                   = "sandbox-opa"
+business_unit                 = "garden"
+subnet_set                    = "general"
+account_name                  = "core-sandbox"
 certificate_arn               = "arn:aws:acm:eu-west-2:763252494486:certificate/a96697ef-5b34-4a4a-a0c8-f86375d80bbb"
 opa18_endpoint                = "opa.garden-development.modernisation-platform.internal"
 opahub_password               = "WVwzkB7E4Q4BU!"
