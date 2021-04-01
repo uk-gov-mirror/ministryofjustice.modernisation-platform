@@ -1,11 +1,7 @@
 resource "aws_lb" "load_balancer" {
   name               = "${var.app_name}-lb"
   load_balancer_type = "application"
-  subnets = [
-    var.subnet_a,
-    var.subnet_b,
-    var.subnet_c
-  ]
+  subnets = data.aws_subnet_ids.shared-public.ids
 
   security_groups = [aws_security_group.load_balancer_security_group.id]
 
@@ -16,7 +12,7 @@ resource "aws_lb_target_group" "target_group" {
   name_prefix          = "opahub"
   port                 = var.server_port
   protocol             = "HTTP"
-  vpc_id               = data.aws_cloudformation_stack.landing_zone.outputs["VpcId"]
+  vpc_id               = data.aws_vpc.shared.id
   target_type          = "instance"
   deregistration_delay = 30
 
@@ -96,7 +92,7 @@ resource "aws_lb_listener_rule" "allow_hub" {
 resource "aws_security_group" "load_balancer_security_group" {
   name_prefix = "${var.app_name}-load-balancer-sg"
   description = "controls access to lb"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.shared.id
 
   ingress {
     protocol  = "tcp"

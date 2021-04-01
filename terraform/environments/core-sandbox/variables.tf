@@ -60,6 +60,10 @@ variable "opa18_app_name" {
 variable "opa18_endpoint" {
 }
 
+variable "certificate_arn" {
+  description = "The certificate for the lb Listener"
+}
+
 variable "opa18_app_image" {
   default = "902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-opa18-hub"
 }
@@ -111,10 +115,6 @@ variable "ec2_max_size" {
 
 variable "ec2_min_size" {
   description = "Min Number of EC2s in the cluster"
-}
-
-variable "subnet_sets" {
-  description = "Subnet sets"
 }
 
 // OPA 18 Hub Variables

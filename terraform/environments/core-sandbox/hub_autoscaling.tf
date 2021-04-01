@@ -72,10 +72,10 @@ resource "aws_cloudwatch_metric_alarm" "hub_alarm_service_cpu_high" {
     ServiceName = aws_ecs_service.ecs_service.name
   }
 
-  alarm_actions = [
-    aws_appautoscaling_policy.hub_scaling_policy_up.arn, local.monitoring_sns_topic
-  ]
-  ok_actions = [local.monitoring_sns_topic]
+  # alarm_actions = [
+  #   aws_appautoscaling_policy.hub_scaling_policy_up.arn, local.monitoring_sns_topic
+  # ]
+  # ok_actions = [local.monitoring_sns_topic]
 
   tags = local.tags
 }

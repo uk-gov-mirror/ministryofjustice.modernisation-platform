@@ -13,7 +13,7 @@ module "bastion_linux" {
   source = "../../modules/bastion_linux"
 
   providers = {
-    aws.share-host   = aws.core-vpc-production # Core VPC production holds the share
+    aws.share-host   = aws.core-vpc # Core VPC production holds the share
     aws.share-tenant = aws                     # The default provider (unaliased, `aws`) is the tenant
   }
 
@@ -21,7 +21,7 @@ module "bastion_linux" {
   subnet_set            = var.subnet_set
   account_name          = var.account_name
   region                = "eu-west-2"
-  bastion_host_key_pair = "dm_sandbox"
+  bastion_host_key_pair = "sandbox-opa"
 
   # Tags
   tags_common = local.tags

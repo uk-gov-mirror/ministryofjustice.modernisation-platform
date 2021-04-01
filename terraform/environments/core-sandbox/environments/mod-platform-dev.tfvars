@@ -1,5 +1,6 @@
 aws_account                   = "sandbox-opa"
-opa18_endpoint                = "ccms-opahub-mod-platform.dev.legalservices.gov.uk"
+certificate_arn               = "arn:aws:acm:eu-west-2:763252494486:certificate/a96697ef-5b34-4a4a-a0c8-f86375d80bbb"
+opa18_endpoint                = "opa.garden-development.modernisation-platform.internal"
 opahub_password               = "WVwzkB7E4Q4BU!"
 wl_password                   = "j0E3G9lC1rqv"
 hub_app_count                 = 1
@@ -24,5 +25,5 @@ cidr_access = [
 db_instance_class      = "db.t3.large"
 db_user                = "opahubdb"
 db_password            = "2jAP6q6pd0lc"
-db_snapshot_identifier = "opa18-post-install-new"
+db_snapshot_identifier = "arn:aws:rds:eu-west-2:411213865113:snapshot:opa18-post-install-new"
 db_multi_az            = "true"

@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "cluster-scaling-group" {
-  vpc_zone_identifier = data.aws_subnet_ids.shared-private
+  vpc_zone_identifier = sort(data.aws_subnet_ids.shared-private.ids)
   desired_capacity = var.ec2_desired_capacity
   max_size         = var.ec2_max_size
   min_size         = var.ec2_min_size
@@ -17,15 +17,6 @@ resource "aws_security_group" "cluster_ec2" {
   name        = "${var.app_name}-cluster-ec2-security-group"
   description = "controls access to the cluster ec2 instance"
   vpc_id      = data.aws_vpc.shared.id
-
-  ingress {
-    protocol  = "tcp"
-    from_port = 22
-    to_port   = 22
-    cidr_blocks = [
-      var.bastion_cidr_access,
-    ]
-  }
 
   ingress {
     protocol  = "tcp"

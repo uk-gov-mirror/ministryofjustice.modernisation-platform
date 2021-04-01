@@ -7,7 +7,7 @@ resource "aws_efs_file_system" "opa-18-storage" {
 
 resource "aws_efs_mount_target" "opa-18-mount" {
   file_system_id = aws_efs_file_system.opa-18-storage.id
-  subnet_id      = var.subnet_a
+  subnet_id      = sort(data.aws_subnet_ids.shared-private.ids)[0]
   security_groups = [
     aws_security_group.opa-18-efs-security-group.id
   ]
@@ -15,7 +15,7 @@ resource "aws_efs_mount_target" "opa-18-mount" {
 
 resource "aws_efs_mount_target" "opa-18-mount_B" {
   file_system_id = aws_efs_file_system.opa-18-storage.id
-  subnet_id      = var.subnet_b
+  subnet_id      = sort(data.aws_subnet_ids.shared-private.ids)[1]
   security_groups = [
     aws_security_group.opa-18-efs-security-group.id
   ]
@@ -23,7 +23,7 @@ resource "aws_efs_mount_target" "opa-18-mount_B" {
 
 resource "aws_efs_mount_target" "opa-18-mount_C" {
   file_system_id = aws_efs_file_system.opa-18-storage.id
-  subnet_id      = var.subnet_c
+  subnet_id      = sort(data.aws_subnet_ids.shared-private.ids)[2]
   security_groups = [
     aws_security_group.opa-18-efs-security-group.id
   ]
@@ -32,15 +32,15 @@ resource "aws_efs_mount_target" "opa-18-mount_C" {
 resource "aws_security_group" "opa-18-efs-security-group" {
   name_prefix = "opahub18-efs-security-group"
   description = "allow inbound access from container instances"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.shared.id
 
   // Allow inbound access from container instances
   ingress {
     protocol  = "tcp"
     from_port = 2049
     to_port   = 2049
-    cidr_blocks = [
-      var.cidr_block
+    security_groups = [
+      aws_security_group.cluster_ec2.id
     ]
   }
 

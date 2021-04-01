@@ -35,7 +35,7 @@ resource "aws_db_instance" "opa18-hub-db" {
 
 resource "aws_db_subnet_group" "opa18-hub-db" {
   name = "opa18-hub-subnet-group"
-  subnet_ids = data.aws_subnet_ids.shared-data
+  subnet_ids = sort(data.aws_subnet_ids.shared-data.ids)
   tags = local.tags
 }
 
@@ -48,9 +48,9 @@ resource "aws_security_group" "opa18-hub-db" {
     from_port = 3306
     to_port   = 3306
     protocol  = "tcp"
-    cidr_blocks = [
-      data.aws_subnet_ids.shared-private
-    ]
+    # cidr_blocks = [
+    #   data.aws_subnet_ids.shared-private
+    # ]
   }
 
   egress {

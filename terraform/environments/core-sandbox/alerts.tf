@@ -14,8 +14,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_CPU_over_threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  #alarm_actions = [local.monitoring_sns_topic]
+  #ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 
@@ -36,8 +36,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Disk_Queue_Depth_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 }
 
 resource "aws_cloudwatch_metric_alarm" "RDS_Free_Storage_Space_Over_Threshold" {
@@ -55,8 +55,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Free_Storage_Space_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 
@@ -77,8 +77,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Read_Lataency_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 
@@ -99,8 +99,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Write_Latency_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -120,8 +120,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Swap_Usage_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -141,8 +141,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Freeable_Memory_Over_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -162,8 +162,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Burst_Balance_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -183,8 +183,8 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Write_IOPS_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -204,34 +204,34 @@ resource "aws_cloudwatch_metric_alarm" "RDS_Read_IOPS_Threshold" {
     DBInstanceIdentifier = aws_db_instance.opa18-hub-db.id
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
 
-resource "aws_db_event_subscription" "rds_events" {
-  name      = "${var.app_name}-rds-event-sub"
-  sns_topic = local.monitoring_sns_topic
-
-  source_type = "db-instance"
-  source_ids  = [aws_db_instance.opa18-hub-db.id]
-
-  event_categories = [
-    "availability",
-    "configuration change",
-    "deletion",
-    "failover",
-    "failure",
-    "low storage",
-    "maintenance",
-    "notification",
-    "recovery",
-    "restoration",
-  ]
-
-  tags = local.tags
-}
+# resource "aws_db_event_subscription" "rds_events" {
+#   name      = "${var.app_name}-rds-event-sub"
+#   # sns_topic = local.monitoring_sns_topic
+#
+#   source_type = "db-instance"
+#   source_ids  = [aws_db_instance.opa18-hub-db.id]
+#
+#   event_categories = [
+#     "availability",
+#     "configuration change",
+#     "deletion",
+#     "failover",
+#     "failure",
+#     "low storage",
+#     "maintenance",
+#     "notification",
+#     "recovery",
+#     "restoration",
+#   ]
+#
+#   tags = local.tags
+# }
 
 # ECS Alerts
 # See autoscaling files for CPU alerts
@@ -251,8 +251,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_Ecs_Memory_Over_Threshold" {
     ServiceName = aws_ecs_service.ecs_service.name
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -274,8 +274,8 @@ resource "aws_cloudwatch_metric_alarm" "EC2_CPU_over_Threshold" {
     AutoScalingGroupName = aws_autoscaling_group.cluster-scaling-group.name
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -295,8 +295,8 @@ resource "aws_cloudwatch_metric_alarm" "Status_Check_Failure" {
     AutoScalingGroupName = aws_autoscaling_group.cluster-scaling-group.name
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -317,8 +317,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_Target_Response_Time" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -338,8 +338,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_Target_Response_Time_Maximum" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -360,8 +360,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_UnHealthy_Hosts" {
     TargetGroup  = aws_lb_target_group.target_group.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -381,8 +381,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_Rejected_Connection_Count" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -402,8 +402,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_http5xxError" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -423,8 +423,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_ApplicationELB5xxError" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -444,8 +444,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_http4xxError" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
@@ -465,8 +465,8 @@ resource "aws_cloudwatch_metric_alarm" "Hub_ApplicationELB4xxError" {
     LoadBalancer = aws_lb.load_balancer.arn_suffix
   }
 
-  alarm_actions = [local.monitoring_sns_topic]
-  ok_actions    = [local.monitoring_sns_topic]
+  # alarm_actions = [local.monitoring_sns_topic]
+  # ok_actions    = [local.monitoring_sns_topic]
 
   tags = local.tags
 }
