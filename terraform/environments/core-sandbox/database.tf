@@ -48,9 +48,7 @@ resource "aws_security_group" "opa18-hub-db" {
     from_port = 3306
     to_port   = 3306
     protocol  = "tcp"
-    cidr_blocks = [
-      data.aws_subnet_ids.shared-private
-    ]
+    cidr_blocks = [data.aws_subnet.private_subnets_a.cidr_block, data.aws_subnet.private_subnets_b.cidr_block, data.aws_subnet.private_subnets_c.cidr_block]
   }
 
   egress {

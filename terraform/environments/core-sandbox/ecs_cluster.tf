@@ -1,3 +1,12 @@
+resource "aws_ecr_repository" "opa18-hub" {
+  name                 = "opa18-hub"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
+
 resource "aws_ecs_cluster" "ecs_cluster" {
   name               = "${var.app_name}-cluster"
   capacity_providers = [aws_ecs_capacity_provider.capacity-provider.name]
@@ -28,7 +37,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     "${path.module}/templates/task_definition_opahub.json.tpl",
     {
       app_name          = var.app_name
-      app_image         = var.opa18_app_image
+      app_image         = format("%s%s", data.aws_caller_identity.current_opa.account_id,var.opa18_app_image)
       server_port       = var.server_port
       aws_region        = var.region
       container_version = var.container_version

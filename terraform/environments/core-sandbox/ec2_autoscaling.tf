@@ -27,6 +27,15 @@ resource "aws_security_group" "cluster_ec2" {
     )
   }
 
+  ingress {
+    protocol  = "tcp"
+    from_port = 32768
+    to_port   = 65535
+    security_groups = [
+      aws_security_group.load_balancer_security_group.id
+    ]
+  }
+
   egress {
     protocol  = "-1"
     from_port = 0

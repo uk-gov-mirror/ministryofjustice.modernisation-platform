@@ -65,7 +65,7 @@ variable "certificate_arn" {
 }
 
 variable "opa18_app_image" {
-  default = "902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-opa18-hub"
+  default = ".dkr.ecr.eu-west-2.amazonaws.com/opa18-hub"
 }
 
 variable "old_context" {

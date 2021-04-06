@@ -1,7 +1,7 @@
 resource "aws_route53_record" "route53_record" {
   provider = aws.core-vpc
-  zone_id = "Z07265222EWMP6UAX47QL"
-  name    = "opa.garden-development.modernisation-platform.internal"
+  zone_id = "Z09358599DDPJ5Y6D00H"
+  name    = "opa.garden-development.modernisation-platform.service.justice.gov.uk"
   type    = "A"
 
   alias {
