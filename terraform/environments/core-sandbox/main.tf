@@ -21,8 +21,6 @@ data "aws_subnet_ids" "shared-public" {
     "Name" = "${var.networking[0].business-unit}-${local.environment}-${var.networking[0].set}-public*"
   }
 }
-data "aws_caller_identity" "current_opa" {}
-
 data "aws_subnet" "private_subnets_a" {
   vpc_id = data.aws_vpc.shared.id
   tags = {

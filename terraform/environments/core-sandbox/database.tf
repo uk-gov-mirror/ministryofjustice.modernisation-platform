@@ -1,5 +1,5 @@
-resource "aws_db_instance" "opa18-hub-db" {
-  identifier                          = "opa18-hub-db"
+resource "aws_db_instance" "db" {
+  identifier                          = var.app_name
   allocated_storage                   = 20
   storage_type                        = "gp2"
   engine                              = "mysql"
@@ -13,7 +13,7 @@ resource "aws_db_instance" "opa18-hub-db" {
   storage_encrypted                   = false
   iam_database_authentication_enabled = false
   vpc_security_group_ids = [
-    aws_security_group.opa18-hub-db.id
+    aws_security_group.db.id
   ]
   snapshot_identifier       = var.db_snapshot_identifier
   backup_retention_period   = 30
@@ -21,8 +21,8 @@ resource "aws_db_instance" "opa18-hub-db" {
   backup_window             = "03:00-06:00"
   final_snapshot_identifier = "opahub18-final-snapshot"
   deletion_protection       = false
-  db_subnet_group_name      = aws_db_subnet_group.opa18-hub-db.id
-  option_group_name         = aws_db_option_group.opa18-hub-db.id
+  db_subnet_group_name      = aws_db_subnet_group.db.id
+  option_group_name         = aws_db_option_group.db.id
 
   timeouts {
     create = "40m"
@@ -33,14 +33,14 @@ resource "aws_db_instance" "opa18-hub-db" {
   tags = local.tags
 }
 
-resource "aws_db_subnet_group" "opa18-hub-db" {
-  name = "opa18-hub-subnet-group"
+resource "aws_db_subnet_group" "db" {
+  name = var.app_name
   subnet_ids = sort(data.aws_subnet_ids.shared-data.ids)
   tags = local.tags
 }
 
-resource "aws_security_group" "opa18-hub-db" {
-  name        = "opa18_hub_allow_db"
+resource "aws_security_group" "db" {
+  name        = var.app_name
   description = "Allow DB inbound traffic"
   vpc_id      = data.aws_vpc.shared.id
 
@@ -61,8 +61,8 @@ resource "aws_security_group" "opa18-hub-db" {
   tags = local.tags
 }
 
-resource "aws_db_option_group" "opa18-hub-db" {
-  name                 = "opa18-hub-db-option-group"
+resource "aws_db_option_group" "db" {
+  name                 = var.app_name
   engine_name          = "mysql"
   major_engine_version = "5.7"
 }

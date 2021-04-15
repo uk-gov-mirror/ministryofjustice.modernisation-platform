@@ -1,5 +1,5 @@
 resource "aws_lb" "load_balancer" {
-  name               = "${var.app_name}-lb"
+  name               = var.app_name
   load_balancer_type = "application"
   subnets = data.aws_subnet_ids.shared-public.ids
 
@@ -9,7 +9,7 @@ resource "aws_lb" "load_balancer" {
 }
 
 resource "aws_lb_target_group" "target_group" {
-  name_prefix          = "opahub"
+  name                 = var.app_name
   port                 = var.server_port
   protocol             = "HTTP"
   vpc_id               = data.aws_vpc.shared.id
@@ -90,7 +90,7 @@ resource "aws_lb_listener_rule" "allow_hub" {
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
-  name_prefix = "${var.app_name}-load-balancer-sg"
+  name_prefix = var.app_name
   description = "controls access to lb"
   vpc_id      = data.aws_vpc.shared.id
 
