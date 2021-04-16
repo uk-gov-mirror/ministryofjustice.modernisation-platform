@@ -143,7 +143,7 @@ resource "aws_launch_template" "ec2-launch-template" {
 data "template_file" "launch-template" {
   template = file("${path.module}/templates/user-data.sh")
   vars = {
-    cluster_name = "${var.app_name}-cluster"
+    cluster_name = var.app_name
     efs_id       = aws_efs_file_system.storage.id
   }
 }
@@ -225,7 +225,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name               = var.app_name
-  capacity_providers = [aws_ecs_capacity_provider.capacity-provider.name]
+  capacity_providers = [aws_ecs_capacity_provider.capacity_provider.name]
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -241,7 +241,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   ]
   cpu    = var.container_cpu
   memory = var.container_memory
-  
+
   volume {
     name = "opa_volume"
     efs_volume_configuration {
@@ -253,7 +253,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     "${path.module}/templates/task_definition_opahub.json.tpl",
     {
       app_name          = var.app_name
-      app_image         = format("%s%s", data.aws_caller_identity.current.account_id,var.app_image)#data.aws_ecr_image.service_image.id #
+      app_image         = format("%s%s", data.aws_caller_identity.current.account_id,var.app_image)#data.aws_ecr_image.service_image.id
       server_port       = var.server_port
       aws_region        = var.region
       container_version = var.container_version
@@ -301,7 +301,7 @@ resource "aws_ecs_service" "ecs_service" {
   tags = var.tags_common
 }
 
-resource "aws_ecs_capacity_provider" "capacity-provider" {
+resource "aws_ecs_capacity_provider" "capacity_provider" {
   name = var.app_name
 
   auto_scaling_group_provider {
@@ -575,4 +575,15 @@ resource "aws_cloudwatch_metric_alarm" "Status_Check_Failure" {
   # ok_actions    = [local.monitoring_sns_topic]
 
   tags = var.tags_common
+}
+# Set up CloudWatch group and log stream and retain logs for 30 days
+resource "aws_cloudwatch_log_group" "hub_log_group" {
+  name              = "${var.app_name}-ecs"
+  retention_in_days = 30
+  tags              = var.tags_common
+}
+
+resource "aws_cloudwatch_log_stream" "hub_log_stream" {
+  name           = "${var.app_name}-log-stream"
+  log_group_name = aws_cloudwatch_log_group.hub_log_group.name
 }

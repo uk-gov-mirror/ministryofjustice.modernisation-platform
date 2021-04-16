@@ -5,7 +5,7 @@
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "${app_name}",
+          "awslogs-group": "${app_name}-ecs",
           "awslogs-region": "${aws_region}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -38,6 +38,10 @@
       {
         "name": "WL_PASSWORD",
         "value": "${wl_password}"
+      },
+      {
+        "name": "HUB_PASSWORD",
+        "value": "${hub_password}"
       },
       {
         "name": "USER_MEM_ARGS",

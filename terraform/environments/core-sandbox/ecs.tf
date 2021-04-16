@@ -1,6 +1,3 @@
-#data "aws_caller_identity" "current" {}
-
-
 module "member-ecs" {
 
   source = "../../modules/member-ecs"
@@ -14,7 +11,7 @@ module "member-ecs" {
   container_memory        = "1536"
   app_count               = "1"
   ami_image_id            = "ami-0491c71e39d336e96"
-  instance_type           = "t3.small"
+  instance_type           = "m5.large"
   key_name                = "sandbox-opa"
   endpoint                = "opa.garden-development.modernisation-platform.service.justice.gov.uk"
   cidr_access             = [

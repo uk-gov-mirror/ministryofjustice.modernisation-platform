@@ -67,7 +67,7 @@ variable "ec2_min_size" {
 }
 
 variable "app_image" {
-  default = "opa"
+  default = ".dkr.ecr.eu-west-2.amazonaws.com/ccms-opa18-hub"
 }
 
 variable "health_check_path" {
